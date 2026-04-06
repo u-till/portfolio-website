@@ -1,1 +1,0 @@
-- [Git add preference](feedback_git_add.md) — use `git add .` not explicit file lists
