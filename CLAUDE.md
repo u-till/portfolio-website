@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a portfolio website for application to ZHdK (Zurich University of the Arts). It showcases creative projects with interactive elements, 3D viewers, and polished animations. Quality and professionalism matter—this represents the applicant's work.
+Personal portfolio website showcasing creative projects with interactive elements, 3D viewers, and polished animations.
 
 **Stack:** Next.js 16 (App Router), TypeScript, Tailwind CSS, Framer Motion, Three.js/React Three Fiber
 

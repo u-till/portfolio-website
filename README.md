@@ -1,6 +1,6 @@
 # Portfolio
 
-Portfolio website for ZHdK IAD application. Showcases creative projects with interactive elements, 3D viewers, and page transitions.
+Personal portfolio website. Showcases creative projects with interactive elements, 3D viewers, and page transitions.
 
 **Live:** [portfolio.utill.ch](https://portfolio.utill.ch)
 

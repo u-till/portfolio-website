@@ -335,11 +335,11 @@ export default function AboutPage() {
                       Portfolio website made with Next.js, Tailwind, Motion & Three.js. Created together with Claude Code.
                     </p>
                     <div className='pt-4 text-xs text-muted-foreground'>
-                      <a href='https://github.com/u-till/zhdk-portfolio' target='_blank' rel='noopener noreferrer' className='hover:text-foreground transition-colors'>
+                      <a href='https://github.com/u-till/portfolio-website' target='_blank' rel='noopener noreferrer' className='hover:text-foreground transition-colors'>
                         Source on GitHub
                       </a>
                       {' · '}
-                      <a href='https://github.com/u-till/zhdk-portfolio/blob/main/LICENSE' target='_blank' rel='noopener noreferrer' className='hover:text-foreground transition-colors'>
+                      <a href='https://github.com/u-till/portfolio-website/blob/main/LICENSE' target='_blank' rel='noopener noreferrer' className='hover:text-foreground transition-colors'>
                         CC BY-NC 4.0 / MIT
                       </a>
                     </div>

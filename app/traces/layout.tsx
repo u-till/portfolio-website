@@ -3,10 +3,10 @@ import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'traces | till solenthaler',
-  description: 'ZHdK Homework assignment on the subject traces.',
+  description: 'Interactive art project exploring urban traces and reconstruction.',
   openGraph: {
     title: 'traces | till solenthaler',
-    description: 'ZHdK Homework assignment on the subject traces.',
+    description: 'Interactive art project exploring urban traces and reconstruction.',
     images: ['/social-thumbnail.jpg'],
   },
 };
