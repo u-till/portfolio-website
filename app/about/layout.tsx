@@ -1,16 +1,14 @@
-import { Metadata } from 'next';
-import { ReactNode } from 'react';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'about | till solenthaler',
+  title: 'about',
   description: 'Webdesigner and developer based in Zurich.',
+  alternates: { canonical: '/about' },
   openGraph: {
-    title: 'about | till solenthaler',
     description: 'Webdesigner and developer based in Zurich.',
-    images: ['/social-thumbnail.jpg'],
   },
 };
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

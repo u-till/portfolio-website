@@ -1,16 +1,14 @@
-import { Metadata } from 'next';
-import { ReactNode } from 'react';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'lost in space | till solenthaler',
+  title: 'lost in space',
   description: 'A collaborative music album combining space-themed productions with original cover art.',
+  alternates: { canonical: '/lost-in-space' },
   openGraph: {
-    title: 'lost in space | till solenthaler',
     description: 'A collaborative music album combining space-themed productions with original cover art.',
-    images: ['/social-thumbnail.jpg'],
   },
 };
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

@@ -1,16 +1,14 @@
-import { Metadata } from 'next';
-import { ReactNode } from 'react';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'dayjob | till solenthaler',
+  title: 'dayjob',
   description: 'A selection of freelance web projects ranging from portfolio sites to business applications.',
+  alternates: { canonical: '/dayjob' },
   openGraph: {
-    title: 'dayjob | till solenthaler',
     description: 'A selection of freelance web projects ranging from portfolio sites to business applications.',
-    images: ['/social-thumbnail.jpg'],
   },
 };
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

@@ -1,16 +1,14 @@
-import { Metadata } from 'next';
-import { ReactNode } from 'react';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'retrofitted | till solenthaler',
+  title: 'retrofitted',
   description: 'A retro lamp transformed into a modern USB-C rechargeable light with dimmable LED.',
+  alternates: { canonical: '/retrofitted' },
   openGraph: {
-    title: 'retrofitted | till solenthaler',
     description: 'A retro lamp transformed into a modern USB-C rechargeable light with dimmable LED.',
-    images: ['/social-thumbnail.jpg'],
   },
 };
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

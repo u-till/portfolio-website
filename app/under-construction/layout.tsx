@@ -1,16 +1,14 @@
-import { Metadata } from 'next';
-import { ReactNode } from 'react';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'under construction | till solenthaler',
+  title: 'under construction',
   description: 'A filing cabinet on wheels built from construction site planks.',
+  alternates: { canonical: '/under-construction' },
   openGraph: {
-    title: 'under construction | till solenthaler',
     description: 'A filing cabinet on wheels built from construction site planks.',
-    images: ['/social-thumbnail.jpg'],
   },
 };
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }
