@@ -115,6 +115,19 @@ export default function StolzeOpenairPage() {
                   farbfilm.ch
                 </a>
               </div>
+              <div className='hidden md:block'></div>
+              <div className='font-bold md:text-right'>Preview Image</div>
+              <div className='hidden md:block'></div>
+              <div className='md:col-span-2'>
+                <a
+                  href='https://meier.photo'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='underline hover:no-underline'
+                >
+                  Dominik Meier
+                </a>
+              </div>
             </div>
           </div>
         </div>
