@@ -40,6 +40,16 @@ const NAVBAR_CONFIG: Record<string, { navbar: string; brand: string; link: strin
     brand: 'text-white/60 hover:text-white',
     link: 'text-white/60 hover:text-white',
   },
+  'stolze-openair': {
+    navbar: 'rounded-xl border border-white/10 bg-neutral-500/10 backdrop-blur-md',
+    brand: 'text-white hover:text-white/80',
+    link: 'text-white/60 hover:text-white',
+  },
+  'tyvee-shopping': {
+    navbar: 'rounded-xl border border-white/10 bg-neutral-500/10 backdrop-blur-md',
+    brand: 'text-white hover:text-white/80',
+    link: 'text-white/60 hover:text-white',
+  },
   dayjob: {
     navbar: 'rounded-2xl border-0 border-transparent bg-foreground/70 backdrop-blur-md shadow-2xl',
     brand: 'text-white hover:text-white/80',
@@ -65,6 +75,8 @@ const SECTION_BACKGROUNDS: Record<string, string> = {
   'toy-lexicon': '#eff6ff',
   'lost-in-space': '#000000ff',
   saudade: 'rgb(0, 0, 0)',
+  'stolze-openair': '#000000',
+  'tyvee-shopping': '#000000',
   dayjob: '#EAEAE8',
   traces: '#EAEAE8',
   about: '#f9fafb',

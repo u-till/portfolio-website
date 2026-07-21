@@ -72,6 +72,14 @@ const PROJECTS: Record<string, { name: string; mobileName?: string; preview: Pre
       size: 'sm',
     },
   },
+  'stolze-openair': {
+    name: 'stolze openair',
+    preview: { type: 'image', src: '/stolze-openair/stolze-openair.jpg' },
+  },
+  'tyvee-shopping': {
+    name: 'TYvee Shopping',
+    preview: { type: 'image', src: '/tyvee-shopping/video-thumb.jpg' },
+  },
   dayjob: { name: 'utill.ch', preview: { type: 'image', src: '/dayjob/dayjob-thumb.png' } },
   traces: {
     name: 'traces',
@@ -89,7 +97,7 @@ const TAGS: Array<{ name: string; projects: string[] }> = [
   { name: 'object', projects: ['under-construction', 'retrofitted', 'amped-up'] },
   { name: 'visual', projects: ['saudade', 'traces'] },
   { name: 'interactive', projects: ['traces'] },
-  { name: 'music', projects: ['lost-in-space'] },
+  { name: 'music', projects: ['lost-in-space', 'stolze-openair', 'tyvee-shopping'] },
   { name: 'code', projects: ['dayjob', 'toy-lexicon'] },
 ];
 

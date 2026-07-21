@@ -10,6 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'amped-up',
     'toy-lexicon',
     'lost-in-space',
+    'stolze-openair',
+    'tyvee-shopping',
     'dayjob',
     'traces',
   ];
