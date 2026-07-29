@@ -95,8 +95,7 @@ const PROJECTS: Record<string, { name: string; mobileName?: string; preview: Pre
 
 const TAGS: Array<{ name: string; projects: string[] }> = [
   { name: 'object', projects: ['under-construction', 'retrofitted', 'amped-up'] },
-  { name: 'visual', projects: ['saudade', 'traces'] },
-  { name: 'interactive', projects: ['traces'] },
+  { name: 'visual', projects: ['saudade', 'traces', 'toy-lexicon'] },
   { name: 'music', projects: ['lost-in-space', 'stolze-openair', 'tyvee-shopping'] },
   { name: 'code', projects: ['dayjob', 'toy-lexicon'] },
 ];
