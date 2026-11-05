@@ -1,13 +1,11 @@
-import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'toy lexicon',
-  description: 'A book exploring construction kits from the last 100 years, with custom CMS and automated InDesign layout.',
-  alternates: { canonical: '/toy-lexicon' },
-  openGraph: {
-    description: 'A book exploring construction kits from the last 100 years, with custom CMS and automated InDesign layout.',
-  },
-};
+  description: 'A book about construction kits from the last 100 years, produced with a custom CMS, a shared JSON database and automated InDesign layouts.',
+  path: '/toy-lexicon',
+  image: '/toy-lexicon/front-mockup-small.png',
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;

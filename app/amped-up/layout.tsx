@@ -1,13 +1,11 @@
-import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'amped up',
-  description: 'Klein+Hummel studio monitors upgraded with digital amplifiers, Bluetooth, and DSP capabilities.',
-  alternates: { canonical: '/amped-up' },
-  openGraph: {
-    description: 'Klein+Hummel studio monitors upgraded with digital amplifiers, Bluetooth, and DSP capabilities.',
-  },
-};
+  description: 'An old pair of Klein+Hummel O 96 studio monitors upgraded with digital amplifiers, Bluetooth and DSP, rebuilt together with a friend.',
+  path: '/amped-up',
+  image: '/amped-up/preview.jpg',
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;

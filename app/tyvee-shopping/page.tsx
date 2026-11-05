@@ -1,6 +1,8 @@
 'use client';
 
 import { useNavigation } from '@/contexts/navigation-context';
+import { useHydrated } from '@/hooks/use-hydrated';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 
 const VIDEO_ID = 'lxm1CI8qb5g';
@@ -9,6 +11,8 @@ export default function TyveeShoppingPage() {
   const { navigateTo } = useNavigation();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const [videoReady, setVideoReady] = useState(false);
+  const hydrated = useHydrated();
 
   const toggleSound = () => {
     iframeRef.current?.contentWindow?.postMessage(
@@ -22,13 +26,19 @@ export default function TyveeShoppingPage() {
     <section className='text-white'>
       {/* Hero: YouTube Video */}
       <div className='h-screen relative overflow-hidden'>
-        <iframe
-          ref={iframeRef}
-          src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&mute=1&loop=1&playlist=${VIDEO_ID}&controls=0&playsinline=1&rel=0&enablejsapi=1`}
-          title='TYvee Shopping'
-          allow='autoplay; encrypted-media; picture-in-picture'
-          className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(100vw,177.78vh)] h-[max(100vh,56.25vw)] pointer-events-none'
-        />
+        {/* Mount the YouTube embed after hydration so it cannot block the first paint; fade it in once loaded */}
+        {hydrated && (
+          <iframe
+            ref={iframeRef}
+            src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&mute=1&loop=1&playlist=${VIDEO_ID}&controls=0&playsinline=1&rel=0&enablejsapi=1`}
+            title='TYvee Shopping'
+            allow='autoplay; encrypted-media; picture-in-picture'
+            onLoad={() => setVideoReady(true)}
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(100vw,177.78vh)] h-[max(100vh,56.25vw)] pointer-events-none transition-opacity duration-700 ${
+              videoReady ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        )}
 
         {/* Title - Consistent position with other pages */}
         <div className='absolute bottom-8 left-4 md:left-8 pointer-events-none z-10'>
@@ -135,18 +145,26 @@ export default function TyveeShoppingPage() {
       {/* Project Navigation */}
       <div className='px-4 md:px-8 pb-16'>
         <div className='flex justify-between items-center border-b-2 border-white pb-2'>
-          <span
-            onClick={() => navigateTo('/')}
+          <Link
+            href='/'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
           >
             index
-          </span>
-          <span
-            onClick={() => navigateTo('/about')}
+          </Link>
+          <Link
+            href='/about'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/about');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
           >
             about
-          </span>
+          </Link>
         </div>
       </div>
     </section>

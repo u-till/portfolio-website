@@ -6,7 +6,8 @@ import { useNavigation } from '@/contexts/navigation-context';
 import { ProcessStep } from '@/types/project';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const ZurichMap = dynamic(() => import('@/components/traces/zurich-map').then((mod) => mod.ZurichMap), {
   ssr: false,
@@ -223,6 +224,14 @@ export default function TracePage() {
   const [selectedProcessIndex, setSelectedProcessIndex] = useState(0);
   const [viewMode, setViewMode] = useState<'map' | 'grid'>('grid');
   const [lightboxImage, setLightboxImage] = useState<{ src: string; overlaySrc?: string; title?: string } | null>(null);
+  const [overlaysReady, setOverlaysReady] = useState(false);
+
+  // Hover overlays are only useful on pointer devices; load them once the grid itself is on screen
+  useEffect(() => {
+    if (!window.matchMedia('(hover: hover)').matches) return;
+    const timeout = setTimeout(() => setOverlaysReady(true), 1500);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <section>
@@ -254,10 +263,11 @@ export default function TracePage() {
                     src={image.src}
                     alt={image.id}
                     fill
+                    loading='eager'
                     className='object-cover'
                     sizes='(max-width: 768px) 25vw, (max-width: 1024px) 16vw, 12vw'
                   />
-                  {image.overlaySrc && (
+                  {overlaysReady && image.overlaySrc && (
                     <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                       <Image
                         src={image.overlaySrc}
@@ -455,6 +465,7 @@ export default function TracePage() {
                         src={step.image}
                         alt={`${step.title} thumbnail`}
                         fill
+                        sizes='(min-width: 1024px) 80px, 100vw'
                         className={step.objectFit === 'contain' ? 'object-contain' : 'object-cover'}
                       />
                     </div>
@@ -485,6 +496,7 @@ export default function TracePage() {
                   src={PROCESS_STEPS[selectedProcessIndex]?.image || PROCESS_STEPS[0].image}
                   alt={PROCESS_STEPS[selectedProcessIndex]?.title || 'Process step'}
                   fill
+                  sizes='60vw'
                   className={
                     PROCESS_STEPS[selectedProcessIndex]?.objectFit === 'contain' ? 'object-contain' : 'object-cover'
                   }
@@ -498,18 +510,26 @@ export default function TracePage() {
       {/* Project Navigation */}
       <div className='px-4 md:px-8 pb-16'>
         <div className='flex justify-between items-center border-b-2 border-black pb-2'>
-          <span
-            onClick={() => navigateTo('/')}
+          <Link
+            href='/'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
           >
             index
-          </span>
-          <span
-            onClick={() => navigateTo('/about')}
+          </Link>
+          <Link
+            href='/about'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/about');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
           >
             about
-          </span>
+          </Link>
         </div>
       </div>
     </section>

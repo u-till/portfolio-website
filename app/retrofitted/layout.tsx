@@ -1,13 +1,11 @@
-import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'retrofitted',
-  description: 'A retro lamp transformed into a modern USB-C rechargeable light with dimmable LED.',
-  alternates: { canonical: '/retrofitted' },
-  openGraph: {
-    description: 'A retro lamp transformed into a modern USB-C rechargeable light with dimmable LED.',
-  },
-};
+  description: 'A broken 70s lamp retrofitted with a USB-C port, rechargeable battery and stepless dimmer, documented with an interactive 3D model.',
+  path: '/retrofitted',
+  image: '/retrofitted/lamp-mood.jpg',
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;

@@ -6,6 +6,7 @@ import { useNavigation } from '@/contexts/navigation-context';
 import { archivo } from '@/lib/fonts';
 import { DockItem, ProcessStep } from '@/types/project';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
 const DOCK_ITEMS: DockItem[] = [
@@ -239,7 +240,7 @@ export default function DayjobPage() {
                     }`}
                   >
                     <div className='relative w-full aspect-square lg:w-20 lg:h-20 flex-shrink-0 overflow-hidden rounded-lg ring-1 ring-neutral-400/80 bg-white'>
-                      <Image src={step.image} alt={`${step.title} thumbnail`} fill className='object-cover' />
+                      <Image src={step.image} alt={`${step.title} thumbnail`} fill sizes='(min-width: 1024px) 80px, 100vw' className='object-cover' />
                     </div>
                     <div className='flex-1'>
                       <span className={`font-bold block ${isActive ? 'lg:text-white' : ''}`}>{step.title}</span>
@@ -267,6 +268,7 @@ export default function DayjobPage() {
                   src={PROCESS_STEPS[selectedProcessIndex]?.image || PROCESS_STEPS[0].image}
                   alt={PROCESS_STEPS[selectedProcessIndex]?.title || 'Process step'}
                   fill
+                  sizes='60vw'
                   className='object-cover'
                 />
               </div>
@@ -277,18 +279,26 @@ export default function DayjobPage() {
         {/* Project Navigation */}
         <div className='relative px-4 md:px-8 pb-16'>
           <div className='flex justify-between items-center border-b-2 border-black pb-2'>
-            <span
-              onClick={() => navigateTo('/')}
+            <Link
+              href='/'
+              onClick={(e) => {
+                e.preventDefault();
+                navigateTo('/');
+              }}
               className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
             >
               index
-            </span>
-            <span
-              onClick={() => navigateTo('/about')}
+            </Link>
+            <Link
+              href='/about'
+              onClick={(e) => {
+                e.preventDefault();
+                navigateTo('/about');
+              }}
               className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
             >
               about
-            </span>
+            </Link>
           </div>
         </div>
       </div>

@@ -4,10 +4,15 @@ import { Lightbox } from '@/components/lightbox';
 import { AlbumViewer3D } from '@/components/lost-in-space/album-viewer-3d';
 import { StarField } from '@/components/lost-in-space/star-field';
 import { useNavigation } from '@/contexts/navigation-context';
-import { orbitron } from '@/lib/fonts';
 import { ProcessStep } from '@/types/project';
+import { Orbitron } from 'next/font/google';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
+
+const orbitron = Orbitron({ weight: ['400', '700'], subsets: ['latin'], display: 'swap' });
+
+const SPOTIFY_EMBED_URL = 'https://open.spotify.com/embed/album/6qs3jyw9rqToXnp1EjEXzL?utm_source=generator&theme=0';
 
 const IMAGES = [
   '/lost-in-space/cover.jpg',
@@ -55,6 +60,8 @@ export default function LostInSpacePage() {
   const [selectedProcessIndex, setSelectedProcessIndex] = useState(0);
   const [lightboxImage, setLightboxImage] = useState<{ src: string; title?: string } | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [playerRequested, setPlayerRequested] = useState(false);
+  const requestPlayer = () => setPlayerRequested(true);
 
   return (
     <section className='relative'>
@@ -72,19 +79,26 @@ export default function LostInSpacePage() {
         </div>
 
         {/* Album Viewer */}
-        <div className='absolute inset-0 flex items-center justify-center z-10'>
+        <div className='absolute inset-0 flex items-center justify-center z-10' onMouseEnter={requestPlayer}>
           <AlbumViewer3D
             coverImage={IMAGES[0]}
-            spotifyEmbedUrl='https://open.spotify.com/embed/album/6qs3jyw9rqToXnp1EjEXzL?utm_source=generator&theme=0'
+            spotifyEmbedUrl={playerRequested ? SPOTIFY_EMBED_URL : undefined}
             isFlipped={isFlipped}
-            onFlip={() => setIsFlipped(!isFlipped)}
+            onFlip={() => {
+              requestPlayer();
+              setIsFlipped(!isFlipped);
+            }}
           />
         </div>
 
         {/* Play Button */}
         <button
-          onClick={() => setIsFlipped(true)}
-          className='absolute bottom-24 md:bottom-8 left-4 md:left-auto md:right-8 z-20 px-6 py-3 rounded-lg bg-[#e34c42] hover:bg-[#c93d34] text-white font-bold text-sm transition-colors shadow-md cursor-pointer flex items-center gap-2'
+          onClick={() => {
+            requestPlayer();
+            setIsFlipped(true);
+          }}
+          onMouseEnter={requestPlayer}
+          className='absolute bottom-24 md:bottom-8 left-4 md:left-auto md:right-8 z-20 px-6 py-3 rounded-lg bg-[#d13d33] hover:bg-[#b8352c] text-white font-bold text-sm transition-colors shadow-md cursor-pointer flex items-center gap-2'
         >
           play
           <svg
@@ -219,6 +233,7 @@ export default function LostInSpacePage() {
                         src={step.image}
                         alt={`${step.title} thumbnail`}
                         fill
+                        sizes='(min-width: 1024px) 80px, 100vw'
                         className={step.objectFit === 'contain' ? 'object-contain' : 'object-cover'}
                       />
                     </div>
@@ -244,6 +259,7 @@ export default function LostInSpacePage() {
                   src={PROCESS_STEPS[selectedProcessIndex]?.image || PROCESS_STEPS[0].image}
                   alt={PROCESS_STEPS[selectedProcessIndex]?.title || 'Process step'}
                   fill
+                  sizes='60vw'
                   className='object-contain object-left-top'
                 />
               </div>
@@ -255,18 +271,26 @@ export default function LostInSpacePage() {
       {/* Project Navigation */}
       <div className='relative z-10 px-4 md:px-8 pb-16'>
         <div className='flex justify-between items-center border-b-2 border-[#e34c42] pb-2'>
-          <span
-            onClick={() => navigateTo('/')}
+          <Link
+            href='/'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none text-[#e34c42] hover:opacity-60 transition-opacity'
           >
             index
-          </span>
-          <span
-            onClick={() => navigateTo('/about')}
+          </Link>
+          <Link
+            href='/about'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/about');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none text-[#e34c42] hover:opacity-60 transition-opacity'
           >
             about
-          </span>
+          </Link>
         </div>
       </div>
 

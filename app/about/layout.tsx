@@ -1,13 +1,11 @@
-import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'about',
-  description: 'Webdesigner and developer based in Zurich.',
-  alternates: { canonical: '/about' },
-  openGraph: {
-    description: 'Webdesigner and developer based in Zurich.',
-  },
-};
+  description: 'Till Solenthaler is a web designer and developer based in Zurich, Switzerland. Education, work experience, skills and how to get in touch.',
+  path: '/about',
+  image: '/about/pp.jpg',
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;

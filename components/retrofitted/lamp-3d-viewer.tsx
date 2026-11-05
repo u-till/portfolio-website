@@ -1,5 +1,6 @@
 'use client';
 
+import { supportsWebGL } from '@/lib/webgl';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
@@ -232,57 +233,59 @@ export function Lamp3DViewer() {
       </div>
 
       {/* 3D Canvas */}
-      <Canvas
-        camera={{ position: [2.74, -4.5, 5.9], fov: 50 }}
-        gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping }}
-        shadows='soft'
-        frameloop='demand'
-        onCreated={handleCanvasCreated}
-      >
-        <Suspense fallback={null}>
-          <InvalidateOnChange intensity={intensity} />
-          {/* Ambient light for overall scene illumination */}
-          <ambientLight intensity={1.4} color='#faf7e9ff' />
-          {/* Key light from top-right */}
-          <directionalLight position={[0, 5, 7]} intensity={0.2} castShadow color='#f67878' />
-          {/* Fill light from left */}
-          <directionalLight position={[-3, 2, -2]} intensity={0.4} />
-          {/* Back light for depth */}
-          <directionalLight position={[0, 3, -5]} intensity={0.5} />
+      {supportsWebGL() && (
+        <Canvas
+          camera={{ position: [2.74, -4.5, 5.9], fov: 50 }}
+          gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping }}
+          shadows='soft'
+          frameloop='demand'
+          onCreated={handleCanvasCreated}
+        >
+          <Suspense fallback={null}>
+            <InvalidateOnChange intensity={intensity} />
+            {/* Ambient light for overall scene illumination */}
+            <ambientLight intensity={1.4} color='#faf7e9ff' />
+            {/* Key light from top-right */}
+            <directionalLight position={[0, 5, 7]} intensity={0.2} castShadow color='#f67878' />
+            {/* Fill light from left */}
+            <directionalLight position={[-3, 2, -2]} intensity={0.4} />
+            {/* Back light for depth */}
+            <directionalLight position={[0, 3, -5]} intensity={0.5} />
 
-          <LampModel intensity={intensity} />
+            <LampModel intensity={intensity} />
 
-          {/* Floor - receives shadows from directional light */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
-            <planeGeometry args={[20, 20]} />
-            <shadowMaterial opacity={0.2} transparent />
-          </mesh>
+            {/* Floor - receives shadows from directional light */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
+              <planeGeometry args={[20, 20]} />
+              <shadowMaterial opacity={0.2} transparent />
+            </mesh>
 
-          <OrbitControls
-            ref={controlsRef}
-            enablePan={true}
-            enableZoom={false}
-            enableRotate={true}
-            minDistance={1.5}
-            maxDistance={8}
-            makeDefault
-            enableDamping={true}
-            dampingFactor={0.05}
-          />
-          <CameraReset controlsRef={controlsRef} />
-
-          {/* Bloom effect for realistic light glow - Optimized */}
-          <EffectComposer multisampling={0}>
-            <Bloom
-              intensity={intensity * 4}
-              luminanceThreshold={0.3}
-              luminanceSmoothing={0.5}
-              radius={0.6}
-              levels={4}
+            <OrbitControls
+              ref={controlsRef}
+              enablePan={true}
+              enableZoom={false}
+              enableRotate={true}
+              minDistance={1.5}
+              maxDistance={8}
+              makeDefault
+              enableDamping={true}
+              dampingFactor={0.05}
             />
-          </EffectComposer>
-        </Suspense>
-      </Canvas>
+            <CameraReset controlsRef={controlsRef} />
+
+            {/* Bloom effect for realistic light glow - Optimized */}
+            <EffectComposer multisampling={0}>
+              <Bloom
+                intensity={intensity * 4}
+                luminanceThreshold={0.3}
+                luminanceSmoothing={0.5}
+                radius={0.6}
+                levels={4}
+              />
+            </EffectComposer>
+          </Suspense>
+        </Canvas>
+      )}
 
       {/* Hand cursor - follows mouse */}
       {isHovering && !isOverSlider && (

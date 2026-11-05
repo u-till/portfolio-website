@@ -8,19 +8,34 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import './globals.css';
 
+const SITE_DESCRIPTION =
+  'Portfolio of Till Solenthaler, web designer and developer based in Zurich, Switzerland: objects, visuals, music and code projects.';
+
+const PERSON_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Till Solenthaler',
+  url: siteUrl,
+  jobTitle: 'Web Designer & Developer',
+  email: 'hello@utill.ch',
+  address: { '@type': 'PostalAddress', addressLocality: 'Zurich', addressCountry: 'CH' },
+  sameAs: ['https://utill.ch', 'https://github.com/u-till'],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: 'portfolio | till solenthaler',
     template: '%s | till solenthaler',
   },
-  description: 'Portfolio of Till Solenthaler, web designer and developer based in Zurich, Switzerland.',
+  description: SITE_DESCRIPTION,
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'portfolio | till solenthaler',
-    description: 'Portfolio of Till Solenthaler, web designer and developer based in Zurich, Switzerland.',
+    description: SITE_DESCRIPTION,
+    url: '/',
     images: ['/social-thumbnail.jpg'],
     type: 'website',
     locale: 'en_US',
@@ -51,6 +66,7 @@ export default function RootLayout({
           </NavigationProvider>
         </Suspense>
         <Analytics />
+        <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_JSON_LD) }} />
       </body>
     </html>
   );

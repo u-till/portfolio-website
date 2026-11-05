@@ -4,10 +4,13 @@ import { Lightbox } from '@/components/lightbox';
 import { useNavigation } from '@/contexts/navigation-context';
 import { useCarouselKeyboard } from '@/hooks/use-carousel-keyboard';
 import { useCarouselScroll } from '@/hooks/use-carousel-scroll';
-import { vt323 } from '@/lib/fonts';
 import { ImageItem, ProcessStep } from '@/types/project';
+import { VT323 } from 'next/font/google';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useCallback, useRef, useState } from 'react';
+
+const vt323 = VT323({ weight: '400', subsets: ['latin'], display: 'swap' });
 
 const GALLERY_IMAGES: ImageItem[] = [
   { src: '/amped-up/preview.jpg', objectFit: 'cover' },
@@ -117,6 +120,7 @@ export default function AmpedUpPage() {
                 fill
                 className={`${image.objectFit === 'contain' ? 'object-contain p-8' : 'object-contain md:object-cover'}`}
                 priority={index === 0}
+                fetchPriority={index === 0 ? 'high' : undefined}
                 sizes='100vw'
               />
             </div>
@@ -173,7 +177,7 @@ export default function AmpedUpPage() {
                   : 'border-black/60 opacity-60 hover:opacity-100'
               }`}
             >
-              <Image src={image.src} alt={`Thumbnail ${index + 1}`} fill className='object-cover' />
+              <Image src={image.src} alt={`Thumbnail ${index + 1}`} fill sizes='64px' className='object-cover' />
             </button>
           ))}
         </div>
@@ -334,6 +338,7 @@ export default function AmpedUpPage() {
                         src={step.image}
                         alt={`${step.title} thumbnail`}
                         fill
+                        sizes='(min-width: 1024px) 80px, 100vw'
                         className={step.objectFit === 'contain' ? 'object-contain' : 'object-cover'}
                       />
                     </div>
@@ -359,6 +364,7 @@ export default function AmpedUpPage() {
                   src={PROCESS_STEPS[selectedProcessIndex]?.image || PROCESS_STEPS[0].image}
                   alt={PROCESS_STEPS[selectedProcessIndex]?.title || 'Process step'}
                   fill
+                  sizes='60vw'
                   className={
                     PROCESS_STEPS[selectedProcessIndex]?.objectFit === 'contain' ? 'object-contain' : 'object-cover'
                   }
@@ -372,18 +378,26 @@ export default function AmpedUpPage() {
       {/* Project Navigation */}
       <div className='px-4 md:px-8 pb-16'>
         <div className='flex justify-between items-center border-b-2 border-black pb-2'>
-          <span
-            onClick={() => navigateTo('/')}
+          <Link
+            href='/'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
           >
             index
-          </span>
-          <span
-            onClick={() => navigateTo('/about')}
+          </Link>
+          <Link
+            href='/about'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/about');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
           >
             about
-          </span>
+          </Link>
         </div>
       </div>
 

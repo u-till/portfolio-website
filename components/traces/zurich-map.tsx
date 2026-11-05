@@ -3,6 +3,7 @@
 import { MapContainer, TileLayer, Marker, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { getImageProps } from 'next/image';
 
 export interface MapImage {
   id: string;
@@ -17,6 +18,8 @@ interface ZurichMapProps {
   images: MapImage[];
   onImageClick: (image: MapImage) => void;
 }
+
+const markerSrc = (src: string) => getImageProps({ src, alt: '', width: 180, height: 240 }).props.src;
 
 const createImageIcon = (imageSrc: string, overlaySrc?: string) => {
   return L.divIcon({
@@ -33,14 +36,14 @@ const createImageIcon = (imageSrc: string, overlaySrc?: string) => {
         position: relative;
       ">
         <img
-          src="${imageSrc}"
+          src="${markerSrc(imageSrc)}"
           class="marker-base"
           style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;"
           alt=""
         />
         ${overlaySrc ? `
           <img
-            src="${overlaySrc}"
+            src="${markerSrc(overlaySrc)}"
             class="marker-overlay"
             style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; opacity: 0; transition: opacity 0.2s;"
             alt=""

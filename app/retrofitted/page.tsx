@@ -4,11 +4,14 @@ import { Lightbox } from '@/components/lightbox';
 import { useNavigation } from '@/contexts/navigation-context';
 import { useCarouselKeyboard } from '@/hooks/use-carousel-keyboard';
 import { useCarouselScroll } from '@/hooks/use-carousel-scroll';
-import { shrikhand } from '@/lib/fonts';
 import { ImageItem, ProcessStep } from '@/types/project';
 import dynamic from 'next/dynamic';
+import { Shrikhand } from 'next/font/google';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useCallback, useRef, useState } from 'react';
+
+const shrikhand = Shrikhand({ weight: '400', subsets: ['latin'], display: 'swap' });
 
 // Lazy load the 3D Lamp viewer to code-split three.js
 const Lamp3DViewer = dynamic(() => import('@/components/retrofitted/lamp-3d-viewer').then((mod) => mod.Lamp3DViewer), {
@@ -137,7 +140,6 @@ export default function RetrofittedPage() {
                 alt={`Retrofitted ${index + 1}`}
                 fill
                 className={`${image.objectFit === 'contain' ? 'object-contain p-8' : 'object-contain md:object-cover'}`}
-                priority={index === 0}
                 sizes='100vw'
               />
             </div>
@@ -185,6 +187,7 @@ export default function RetrofittedPage() {
           {/* 3D Button */}
           <button
             onClick={() => navigateToPhoto(0)}
+            aria-label='3D model'
             className={`relative cursor-pointer transition-all flex-shrink-0 w-16 h-16 rounded-full border border-[#e7d68d]/40 bg-[#c33b32] backdrop-blur-md hover:bg-[#a32f28] flex items-center justify-center ${
               activeIndex === 0 ? 'ring-2 ring-[#e7d68d]/60' : ''
             }`}
@@ -216,7 +219,7 @@ export default function RetrofittedPage() {
                 activeIndex === index + 1 ? 'ring-2 ring-[#e7d68d]/60' : ''
               }`}
             >
-              <Image src={image.src} alt={`Thumbnail ${index + 1}`} fill className='object-cover rounded-full' />
+              <Image src={image.src} alt={`Thumbnail ${index + 1}`} fill sizes='64px' className='object-cover rounded-full' />
             </button>
           ))}
         </div>
@@ -374,6 +377,7 @@ export default function RetrofittedPage() {
                         src={step.image}
                         alt={`${step.title} thumbnail`}
                         fill
+                        sizes='(min-width: 1024px) 80px, 100vw'
                         className={step.objectFit === 'contain' ? 'object-contain p-2' : 'object-cover'}
                       />
                     </div>
@@ -408,6 +412,7 @@ export default function RetrofittedPage() {
                   src={PROCESS_STEPS[selectedProcessIndex]?.image || PROCESS_STEPS[0].image}
                   alt={PROCESS_STEPS[selectedProcessIndex]?.title || 'Process step'}
                   fill
+                  sizes='60vw'
                   className={
                     PROCESS_STEPS[selectedProcessIndex]?.objectFit === 'contain' ? 'object-contain' : 'object-cover'
                   }
@@ -421,18 +426,26 @@ export default function RetrofittedPage() {
       {/* Project Navigation */}
       <div className='bg-[#faf7e8] px-4 md:px-8 pb-16'>
         <div className='flex justify-between items-center border-b-2 border-black pb-2'>
-          <span
-            onClick={() => navigateTo('/')}
+          <Link
+            href='/'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
           >
             index
-          </span>
-          <span
-            onClick={() => navigateTo('/about')}
+          </Link>
+          <Link
+            href='/about'
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/about');
+            }}
             className='font-bold cursor-pointer lowercase text-[clamp(0.75rem,3vh,1.125rem)] md:text-[clamp(1rem,4vh,4.5rem)] leading-none hover:opacity-60 transition-opacity'
           >
             about
-          </span>
+          </Link>
         </div>
       </div>
 

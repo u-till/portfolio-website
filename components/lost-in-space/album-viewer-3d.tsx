@@ -8,7 +8,7 @@ const THICKNESS = 15;
 
 interface AlbumViewer3DProps {
   coverImage: string;
-  spotifyEmbedUrl: string;
+  spotifyEmbedUrl?: string;
   isFlipped: boolean;
   onFlip: () => void;
 }
@@ -18,13 +18,19 @@ export function AlbumViewer3D({ coverImage, spotifyEmbedUrl, isFlipped, onFlip }
   const [isFlipping, setIsFlipping] = useState(false);
   const [isPushing, setIsPushing] = useState(false);
   const isMobile = useIsMobile();
+  const [prevFlipped, setPrevFlipped] = useState(isFlipped);
 
-  useEffect(() => {
+  if (prevFlipped !== isFlipped) {
+    setPrevFlipped(isFlipped);
     setIsFlipping(true);
     setTilt({ x: 0, y: 0 });
+  }
+
+  useEffect(() => {
+    if (!isFlipping) return;
     const timeout = setTimeout(() => setIsFlipping(false), 800);
     return () => clearTimeout(timeout);
-  }, [isFlipped]);
+  }, [isFlipping]);
 
   const handleFlip = () => {
     onFlip();
@@ -105,7 +111,15 @@ export function AlbumViewer3D({ coverImage, spotifyEmbedUrl, isFlipped, onFlip }
             onClick={handleFlip}
             style={{ transform: `translateZ(${THICKNESS / 2}px)` }}
           >
-            <Image src={coverImage} alt='Album Cover' fill className='object-cover pointer-events-none' />
+            <Image
+              src={coverImage}
+              alt='Album Cover'
+              fill
+              priority
+              fetchPriority='high'
+              sizes='(min-width: 1024px) 520px, 340px'
+              className='object-cover pointer-events-none'
+            />
           </div>
 
           {/* Back - Spotify Player */}
@@ -120,6 +134,7 @@ export function AlbumViewer3D({ coverImage, spotifyEmbedUrl, isFlipped, onFlip }
               src='/lost-in-space/backside.jpg'
               alt='Album Backside'
               fill
+              sizes='(min-width: 1024px) 520px, 340px'
               className='object-cover pointer-events-none'
             />
 
@@ -136,15 +151,16 @@ export function AlbumViewer3D({ coverImage, spotifyEmbedUrl, isFlipped, onFlip }
               >
                 Flip Back
               </button>
-              <iframe
-                data-testid='embed-iframe'
-                src={spotifyEmbedUrl}
-                width={isMobile ? '92%' : '92%'}
-                height={isMobile ? '134%' : '101%'}
-                style={{ border: 0 }}
-                allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
-                loading='lazy'
-              ></iframe>
+              {spotifyEmbedUrl && (
+                <iframe
+                  title='Spotify player: Lost in Space'
+                  src={spotifyEmbedUrl}
+                  width='92%'
+                  height={isMobile ? '134%' : '101%'}
+                  style={{ border: 0 }}
+                  allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+                />
+              )}
             </div>
           </div>
 

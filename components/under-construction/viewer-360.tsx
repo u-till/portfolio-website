@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import Image, { getImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface Viewer360Props {
@@ -150,7 +150,7 @@ export function Viewer360({
     }
   }, [isDragging]);
 
-  // Preload all images
+  // Preload every frame through the same optimized URLs the viewer renders, so the cache is warm
   useEffect(() => {
     setIsLoading(true);
 
@@ -158,11 +158,14 @@ export function Viewer360({
       const imagePromises = [];
 
       for (let i = 0; i < totalFrames; i++) {
+        const { props } = getImageProps({ src: getImagePath(i), alt: '', fill: true, sizes: '100vw' });
         const promise = new Promise((resolve, reject) => {
           const img = new window.Image();
           img.onload = () => resolve(img);
           img.onerror = reject;
-          img.src = getImagePath(i);
+          img.sizes = props.sizes ?? '';
+          img.srcset = props.srcSet ?? '';
+          img.src = props.src;
         });
         imagePromises.push(promise);
       }
@@ -221,8 +224,10 @@ export function Viewer360({
         src={backgroundImage}
         alt='360 viewer background'
         fill
+        sizes='100vw'
         className='object-cover pointer-events-none'
         priority
+        fetchPriority='high'
       />
 
       {/* 360 rotating image */}
@@ -232,8 +237,10 @@ export function Viewer360({
             src={getImagePath(currentFrame)}
             alt={`360 view frame ${currentFrame + 1}`}
             fill
+            sizes='100vw'
             className='object-contain pointer-events-none'
             priority={currentFrame === 0}
+            fetchPriority={currentFrame === 0 ? 'high' : undefined}
             draggable={false}
           />
         </div>

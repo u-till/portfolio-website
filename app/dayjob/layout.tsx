@@ -1,13 +1,11 @@
-import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'dayjob',
-  description: 'A selection of freelance web projects ranging from portfolio sites to business applications.',
-  alternates: { canonical: '/dayjob' },
-  openGraph: {
-    description: 'A selection of freelance web projects ranging from portfolio sites to business applications.',
-  },
-};
+  description: 'Freelance web design and development by Till Solenthaler: a selection of client websites built with React, Next.js, Tailwind and WordPress.',
+  path: '/dayjob',
+  image: '/dayjob/dayjob-thumb.png',
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;

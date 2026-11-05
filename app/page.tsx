@@ -4,6 +4,7 @@ import { useNavigation } from '@/contexts/navigation-context';
 import { AnimatePresence, motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const Lamp3DPreview = dynamic(() => import('@/components/home/lamp-preview').then((mod) => mod.Lamp3DPreview), {
@@ -12,9 +13,9 @@ const Lamp3DPreview = dynamic(() => import('@/components/home/lamp-preview').the
 });
 
 const SIZES = {
-  sm: 'w-36 h-36 md:w-48 md:h-48 lg:w-60 lg:h-60',
-  md: 'w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80',
-  lg: 'w-56 h-56 md:w-72 md:h-72 lg:w-96 lg:h-96',
+  sm: { className: 'w-36 h-36 md:w-48 md:h-48 lg:w-60 lg:h-60', sizes: '(min-width: 1024px) 240px, (min-width: 768px) 192px, 144px' },
+  md: { className: 'w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80', sizes: '(min-width: 1024px) 320px, (min-width: 768px) 256px, 192px' },
+  lg: { className: 'w-56 h-56 md:w-72 md:h-72 lg:w-96 lg:h-96', sizes: '(min-width: 1024px) 384px, (min-width: 768px) 288px, 224px' },
 } as const;
 
 type PreviewConfig =
@@ -109,14 +110,14 @@ function AnimatedImagePreview({
   src,
   altSrc,
   alt,
-  sizeClass,
+  size,
   interval,
   blinkDuration,
 }: {
   src: string;
   altSrc: string;
   alt: string;
-  sizeClass: string;
+  size: (typeof SIZES)[keyof typeof SIZES];
   interval: number;
   blinkDuration?: number;
 }) {
@@ -143,16 +144,24 @@ function AnimatedImagePreview({
   }, [interval, blinkDuration]);
 
   return (
-    <motion.div className={`relative ${sizeClass}`} {...floatingAnimation}>
-      <Image src={showAlt ? altSrc : src} alt={alt} fill className='object-contain' />
+    <motion.div className={`relative ${size.className}`} {...floatingAnimation}>
+      <Image src={showAlt ? altSrc : src} alt={alt} fill sizes={size.sizes} className='object-contain' />
     </motion.div>
   );
 }
 
-function StaticImagePreview({ src, alt, sizeClass }: { src: string; alt: string; sizeClass: string }) {
+function StaticImagePreview({
+  src,
+  alt,
+  size,
+}: {
+  src: string;
+  alt: string;
+  size: (typeof SIZES)[keyof typeof SIZES];
+}) {
   return (
-    <motion.div className={`relative ${sizeClass}`} {...floatingAnimation}>
-      <Image src={src} alt={alt} fill className='object-contain' />
+    <motion.div className={`relative ${size.className}`} {...floatingAnimation}>
+      <Image src={src} alt={alt} fill sizes={size.sizes} className='object-contain' />
     </motion.div>
   );
 }
@@ -174,8 +183,9 @@ function Rotating360Preview() {
         src={`/under-construction/korpus-360/normalized-${String(currentFrame).padStart(2, '0')}.png`}
         alt='360 preview'
         fill
+        sizes='(min-width: 1024px) 320px, (min-width: 768px) 256px, 192px'
         className='object-contain'
-        priority
+        loading='eager'
       />
     </div>
   );
@@ -192,23 +202,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const projectValues = Object.values(PROJECTS);
-    const preloadCount = Math.min(3, projectValues.length);
-    for (let i = 0; i < preloadCount; i++) {
-      const { preview } = projectValues[i];
-      if (preview.type === 'image') {
-        const img = new window.Image();
-        img.src = preview.src;
-      } else if (preview.type === 'toggle' || preview.type === 'blink') {
-        const img1 = new window.Image();
-        const img2 = new window.Image();
-        img1.src = preview.src;
-        img2.src = preview.altSrc;
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     return () => {
       if (cycleRef.current) clearInterval(cycleRef.current);
     };
@@ -218,7 +211,7 @@ export default function Home() {
     const project = PROJECTS[projectKey];
     if (!project) return null;
     const preview = project.preview;
-    const sizeClass = 'size' in preview ? SIZES[preview.size || 'md'] : SIZES.md;
+    const size = 'size' in preview ? SIZES[preview.size || 'md'] : SIZES.md;
 
     switch (preview.type) {
       case '360':
@@ -231,7 +224,7 @@ export default function Home() {
             src={preview.src}
             altSrc={preview.altSrc}
             alt={projectKey}
-            sizeClass={sizeClass}
+            size={size}
             interval={preview.interval}
           />
         );
@@ -241,13 +234,13 @@ export default function Home() {
             src={preview.src}
             altSrc={preview.altSrc}
             alt={projectKey}
-            sizeClass={sizeClass}
+            size={size}
             interval={preview.interval}
             blinkDuration={preview.blinkDuration}
           />
         );
       case 'image':
-        return <StaticImagePreview src={preview.src} alt={projectKey} sizeClass={sizeClass} />;
+        return <StaticImagePreview src={preview.src} alt={projectKey} size={size} />;
       default:
         return null;
     }
@@ -279,6 +272,7 @@ export default function Home() {
 
   return (
     <section onMouseMove={handleMouseMove} className='pt-32 px-4 pb-16 md:pb-16 md:px-8'>
+      <h1 className='sr-only'>till solenthaler – portfolio</h1>
       {/* Floating Preview - follows cursor (desktop only) */}
       <AnimatePresence mode='wait'>
         {hoveredProject && (
@@ -303,7 +297,9 @@ export default function Home() {
           return (
             <div key={tag.name}>
               {/* Tag row */}
-              <div
+              <button
+                type='button'
+                aria-expanded={isOpen}
                 onClick={() => setOpenTag(isOpen ? null : tag.name)}
                 onMouseEnter={() => startCycling(tag.projects)}
                 onMouseLeave={() => {
@@ -314,47 +310,47 @@ export default function Home() {
               >
                 <span className='inline-block rounded-full bg-current flex-shrink-0 w-[1cap] h-[1cap]' />
                 {tag.name}
-              </div>
+              </button>
 
               {/* Project drawer */}
-              <AnimatePresence>
-                {isOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className='overflow-hidden'
-                  >
-                    <div className='flex flex-col pl-6 md:pl-10'>
-                      {tag.projects.map((projectKey) => (
-                        <div
-                          key={projectKey}
-                          onClick={() => navigateTo(`/${projectKey}`)}
-                          onMouseEnter={() => {
-                            stopCycling();
-                            setHoveredProject(projectKey);
-                          }}
-                          onMouseLeave={() => setHoveredProject(null)}
-                          className='group/project relative font-extrabold tracking-tight cursor-pointer flex items-center lowercase w-full border-b border-black/30 text-[clamp(0.875rem,4vh,1.5rem)] md:text-[clamp(0.875rem,4vh,4rem)] leading-none py-1 md:py-2'
-                        >
-                          <span className='absolute -left-[1em] translate-x-[-0.5em] opacity-0 group-hover/project:translate-x-0 group-hover/project:opacity-100 transition-all duration-300 ease-out'>
-                            ➔
-                          </span>
-                          {PROJECTS[projectKey].mobileName ? (
-                            <>
-                              <span className='md:hidden'>{PROJECTS[projectKey].mobileName}</span>
-                              <span className='hidden md:inline'>{PROJECTS[projectKey].name}</span>
-                            </>
-                          ) : (
-                            PROJECTS[projectKey].name
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <motion.div
+                initial={false}
+                animate={isOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                inert={!isOpen}
+                className='overflow-hidden'
+              >
+                <div className='flex flex-col pl-6 md:pl-10'>
+                  {tag.projects.map((projectKey) => (
+                    <Link
+                      key={projectKey}
+                      href={`/${projectKey}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigateTo(`/${projectKey}`);
+                      }}
+                      onMouseEnter={() => {
+                        stopCycling();
+                        setHoveredProject(projectKey);
+                      }}
+                      onMouseLeave={() => setHoveredProject(null)}
+                      className='group/project relative font-extrabold tracking-tight cursor-pointer flex items-center lowercase w-full border-b border-black/30 text-[clamp(0.875rem,4vh,1.5rem)] md:text-[clamp(0.875rem,4vh,4rem)] leading-none py-1 md:py-2'
+                    >
+                      <span className='absolute -left-[1em] translate-x-[-0.5em] opacity-0 group-hover/project:translate-x-0 group-hover/project:opacity-100 transition-all duration-300 ease-out'>
+                        ➔
+                      </span>
+                      {PROJECTS[projectKey].mobileName ? (
+                        <>
+                          <span className='md:hidden'>{PROJECTS[projectKey].mobileName}</span>
+                          <span className='hidden md:inline'>{PROJECTS[projectKey].name}</span>
+                        </>
+                      ) : (
+                        PROJECTS[projectKey].name
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
             </div>
           );
         })}

@@ -2,6 +2,7 @@
 
 import { useNavigation } from '@/contexts/navigation-context';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect } from 'react';
 
 const NAVBAR_CONFIG: Record<string, { navbar: string; brand: string; link: string }> = {
@@ -18,7 +19,7 @@ const NAVBAR_CONFIG: Record<string, { navbar: string; brand: string; link: strin
   retrofitted: {
     navbar: 'rounded-[32px] border border-[#e7d68d]/40 bg-[#c33b32] backdrop-blur-md shadow-sm',
     brand: 'text-white hover:text-white/80',
-    link: 'text-white/60 hover:text-white',
+    link: 'text-white/90 hover:text-white',
   },
   'amped-up': {
     navbar: 'rounded-[0px] border border-black/60 bg-background backdrop-blur-md',
@@ -56,9 +57,9 @@ const NAVBAR_CONFIG: Record<string, { navbar: string; brand: string; link: strin
     link: 'text-white/60 hover:text-white',
   },
   traces: {
-    navbar: 'rounded-2xl border-0 border-transparent bg-sky-700/70 backdrop-blur-md shadow-2xl',
+    navbar: 'rounded-2xl border-0 border-transparent bg-sky-800/90 backdrop-blur-md shadow-2xl',
     brand: 'text-white hover:text-white/80',
-    link: 'text-white/60 hover:text-white',
+    link: 'text-white/85 hover:text-white',
   },
   about: {
     navbar: 'rounded-sm bg-background/60 backdrop-blur-md border-black border-2',
@@ -85,6 +86,11 @@ const SECTION_BACKGROUNDS: Record<string, string> = {
 export function Navigation() {
   const { currentPage, navigateTo } = useNavigation();
 
+  const handleNavigate = (path: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigateTo(path);
+  };
+
   const currentSection = currentPage && NAVBAR_CONFIG[currentPage] ? currentPage : 'welcome';
 
   useEffect(() => {
@@ -103,22 +109,24 @@ export function Navigation() {
   return (
     <div className='fixed top-4 md:top-8 w-full z-50 flex justify-start'>
       <nav className={`mx-4 md:mx-8 px-4 md:px-6 py-3 md:py-4 flex items-center gap-2 ${config.navbar}`} style={navbarStyle}>
-        <button onClick={() => navigateTo('/')} className='cursor-pointer flex-shrink-0'>
-          <Image src='/icon.png' alt='Logo' width={24} height={24} className='rounded-sm' />
-        </button>
+        <Link href='/' onClick={handleNavigate('/')} className='cursor-pointer flex-shrink-0'>
+          <Image src='/icon.png' alt='till solenthaler logo' width={24} height={24} className='rounded-sm' />
+        </Link>
         <div className='flex items-baseline gap-2'>
-          <button
-            onClick={() => navigateTo('/')}
+          <Link
+            href='/'
+            onClick={handleNavigate('/')}
             className={`text-base md:text-lg font-medium tracking-tight transition-colors ${config.brand} cursor-pointer whitespace-nowrap`}
           >
             till solenthaler
-          </button>
-          <button
-            onClick={() => navigateTo('/about')}
+          </Link>
+          <Link
+            href='/about'
+            onClick={handleNavigate('/about')}
             className={`text-sm font-semibold transition-colors cursor-pointer ${config.link}`}
           >
             about
-          </button>
+          </Link>
         </div>
       </nav>
     </div>

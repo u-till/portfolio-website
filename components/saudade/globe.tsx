@@ -1,5 +1,6 @@
 'use client';
 
+import { supportsWebGL } from '@/lib/webgl';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useRef } from 'react';
 import * as THREE from 'three';
@@ -69,6 +70,8 @@ function Earth({ activeLocation }: GlobeProps) {
 }
 
 export function Globe({ activeLocation }: GlobeProps) {
+  if (!supportsWebGL()) return null;
+
   return (
     <div className='w-full h-full'>
       <Canvas camera={{ position: [0, 0, 6.5], fov: 45 }}>

@@ -1,5 +1,6 @@
 'use client';
 
+import { supportsWebGL } from '@/lib/webgl';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Suspense, useRef } from 'react';
@@ -30,6 +31,8 @@ function SpinningLampModel() {
 }
 
 export function Lamp3DPreview() {
+  if (!supportsWebGL()) return null;
+
   return (
     <div className='w-64 h-64 md:w-80 md:h-80 lg:w-[416px] lg:h-[416px]'>
       <Canvas camera={{ position: [2.74, 1.1, 0.9], fov: 50 }} gl={{ antialias: false }}>
